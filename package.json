@@ -1,0 +1,56 @@
+{
+  "name": "dataguard-ai",
+  "displayName": "DataGuard AI",
+  "description": "AI-powered dataset health analysis for Data Scientists",
+  "publisher": "dataguard",
+  "version": "0.1.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Data Science", "Machine Learning"],
+  "activationEvents": ["onLanguage:python", "onLanguage:csv", "*"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "dataguard.analyzeDataset",
+        "title": "Analyze Dataset Health",
+        "category": "DataGuard"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dataguard",
+          "title": "DataGuard",
+          "icon": "$(shield)"
+        }
+      ]
+    },
+    "views": {
+      "dataguard": [
+        {
+          "id": "dataguardView",
+          "name": "DataGuard"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DataGuard",
+      "properties": {
+        "dataguard.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key for AI-powered summaries"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0"
+  }
+}
