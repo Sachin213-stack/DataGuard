@@ -6,7 +6,7 @@
   "version": "0.1.0",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Data Science", "Machine Learning"],
-  "activationEvents": ["onLanguage:python", "onLanguage:csv", "*"],
+  "activationEvents": ["onLanguage:python", "onLanguage:csv", "onCommand:dataguard.analyzeDataset"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [

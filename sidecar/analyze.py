@@ -30,7 +30,7 @@ def generate_rule_based_summary(result: dict) -> str:
     if result['classImbalance']:
         for col, counts in result['classImbalance'].items():
             values = list(counts.values())
-            if max(values) / (sum(values) + 1e-9) > IMBALANCE_THRESHOLD:
+            if max(values) / (sum(values) + 1e-9) > IMBALANCE_THRESHOLD:  # epsilon guards against unexpected empty counts
                 lines.append(f"⚠ Column '{col}' is heavily imbalanced. Consider resampling techniques.")
     if not lines:
         lines.append("✅ No critical data quality issues detected. Your dataset looks healthy!")

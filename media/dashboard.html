@@ -116,7 +116,7 @@
   document.getElementById('stat-missing').textContent = Object.keys(data.missingValues || {}).length;
 
   // Health score
-  const OUTLIER_PENALTY = 5;
+  const OUTLIER_PENALTY = __OUTLIER_PENALTY__;
   const avgMissing = Object.keys(data.missingPercent || {}).length > 0
     ? Object.values(data.missingPercent).reduce((a, b) => a + b, 0) / Object.keys(data.missingPercent).length
     : 0;
