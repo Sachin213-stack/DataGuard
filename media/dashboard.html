@@ -7,37 +7,78 @@
   <title>DataGuard Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { background: #1e1e2e; color: #cdd6f4; font-family: 'Segoe UI', sans-serif; }
-    .card { background: #313244; border-radius: 12px; padding: 1.25rem; }
-    .badge-warn { background: #f38ba8; color: #1e1e2e; border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; font-weight: 700; }
-    .badge-ok   { background: #a6e3a1; color: #1e1e2e; border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; font-weight: 700; }
-    .gauge-ring { stroke-dasharray: 283; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-    table { width: 100%; border-collapse: collapse; }
-    th { background: #45475a; color: #cba6f7; text-align: left; padding: 8px 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    td { padding: 8px 12px; font-size: 0.85rem; border-bottom: 1px solid #45475a; }
-    tr:hover td { background: #45475a44; }
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-primary: #8b5cf6;
+      --accent-secondary: #ec4899;
+    }
+    body {
+      background: radial-gradient(circle at top left, #1e1b4b, var(--bg-dark) 40%),
+                  radial-gradient(circle at bottom right, #31112c, var(--bg-dark) 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .badge-warn { background: linear-gradient(135deg, #f43f5e, #fb923c); color: #fff; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 10px rgba(244, 63, 94, 0.3); }
+    .badge-ok   { background: linear-gradient(135deg, #10b981, #3b82f6); color: #fff; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3); }
+    .gauge-ring { stroke-dasharray: 283; stroke-linecap: round; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    
+    .gradient-text {
+      background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    th { background: rgba(255,255,255,0.05); color: var(--text-muted); text-align: left; padding: 12px 16px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--card-border); }
+    th:first-child { border-top-left-radius: 8px; } th:last-child { border-top-right-radius: 8px; }
+    td { padding: 12px 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); transition: background 0.2s ease; }
+    tr:hover td { background: rgba(255, 255, 255, 0.04); }
   </style>
 </head>
 <body class="p-6 min-h-screen">
 
   <!-- Header -->
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-purple-400">🛡 DataGuard AI</h1>
-      <p id="file-name" class="text-sm text-gray-400 mt-1"></p>
+      <h1 class="text-3xl font-extrabold gradient-text tracking-tight flex items-center gap-2">
+        <span class="text-2xl">🛡</span> DataGuard AI
+      </h1>
+      <p id="file-name" class="text-sm var(--text-muted) mt-2 font-mono bg-black/30 px-3 py-1 rounded-md inline-block border border-white/5"></p>
     </div>
     <div class="flex items-center gap-4">
       <!-- Health Score Gauge -->
       <div class="flex flex-col items-center">
-        <svg width="90" height="90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#45475a" stroke-width="10"/>
-          <circle id="gauge-circle" cx="50" cy="50" r="45" fill="none" stroke="#a6e3a1"
-                  stroke-width="10" stroke-dasharray="283" stroke-dashoffset="283"
-                  class="gauge-ring" transform="rotate(-90 50 50)"/>
-          <text id="gauge-text" x="50" y="55" text-anchor="middle" font-size="18" font-weight="bold" fill="#cdd6f4">0</text>
-        </svg>
-        <span class="text-xs text-gray-400 mt-1">Health Score</span>
+        <div class="relative">
+          <svg width="100" height="100" viewBox="0 0 100 100" class="drop-shadow-lg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+            <circle id="gauge-circle" cx="50" cy="50" r="45" fill="none" stroke="#10b981"
+                    stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283"
+                    class="gauge-ring" transform="rotate(-90 50 50)" stroke-linecap="round"/>
+            <text id="gauge-text" x="50" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" class="drop-shadow-md">0</text>
+          </svg>
+        </div>
+        <span class="text-xs uppercase tracking-widest text-[var(--text-muted)] mt-2 font-semibold">Health Score</span>
       </div>
     </div>
   </div>
@@ -177,21 +218,21 @@
         datasets: [{
           label: 'Missing %',
           data: missingPcts,
-          backgroundColor: missingPcts.map(p => p > 20 ? '#f38ba8' : p > 5 ? '#f9e2af' : '#89b4fa'),
-          borderRadius: 4,
+          backgroundColor: missingPcts.map(p => p > 20 ? '#f43f5e' : p > 5 ? '#fb923c' : '#3b82f6'),
+          borderRadius: 6,
         }]
       },
       options: {
         responsive: true,
         plugins: { legend: { display: false } },
         scales: {
-          x: { ticks: { color: '#cdd6f4', maxRotation: 45 }, grid: { color: '#45475a' } },
-          y: { ticks: { color: '#cdd6f4' }, grid: { color: '#45475a' }, max: 100, title: { display: true, text: '% Missing', color: '#cdd6f4' } }
+          x: { ticks: { color: 'var(--text-muted)', maxRotation: 45 }, grid: { color: 'var(--card-border)' } },
+          y: { ticks: { color: 'var(--text-muted)' }, grid: { color: 'var(--card-border)' }, max: 100, title: { display: true, text: '% Missing', color: 'var(--text-muted)' } }
         }
       }
     });
   } else {
-    document.getElementById('missing-chart').parentElement.innerHTML += '<p class="text-green-400 text-sm mt-2">✅ No missing values!</p>';
+    document.getElementById('missing-chart').parentElement.innerHTML += '<p class="text-emerald-400 font-medium text-sm mt-2">✅ No missing values!</p>';
   }
 
   // Data Types Donut Chart
@@ -202,7 +243,7 @@
     typeCounts[key] = (typeCounts[key] || 0) + 1;
   });
   const typeLabels = Object.keys(typeCounts);
-  const typePalette = ['#cba6f7','#89b4fa','#a6e3a1','#f9e2af','#f38ba8','#fab387','#94e2d5'];
+  const typePalette = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
   new Chart(document.getElementById('dtype-chart'), {
     type: 'doughnut',
     data: {
@@ -210,14 +251,14 @@
       datasets: [{
         data: typeLabels.map(k => typeCounts[k]),
         backgroundColor: typePalette.slice(0, typeLabels.length),
-        borderWidth: 2,
-        borderColor: '#313244',
+        borderWidth: 0,
+        hoverOffset: 4,
       }]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { position: 'right', labels: { color: '#cdd6f4', font: { size: 11 } } }
+        legend: { position: 'right', labels: { color: 'var(--text-main)', font: { size: 12, family: 'Outfit' } } }
       }
     }
   });
