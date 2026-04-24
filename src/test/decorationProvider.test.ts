@@ -24,6 +24,8 @@ function makeResult(overrides: Partial<AnalysisResult> = {}): AnalysisResult {
         outlierColumns: [],
         classImbalance: null,
         dtypes: {},
+        dataProcessing: [],
+        analysisTechniques: [],
         summary: '',
         ...overrides,
     };

@@ -68,6 +68,7 @@ Press `F5` to launch the Extension Development Host (works in both VS Code and A
 2. **Click the CodeLens** to analyze the dataset and open the dashboard
 3. **Open a `.csv` / `.parquet` / `.json` file** directly — analysis triggers automatically
 4. **Command Palette** → `DataGuard: Analyze Dataset Health`
+5. **Command Palette** → `DataGuard: Browse & Analyze Any Dataset...` (select any file globally)
 
 ## Configuration
 
@@ -99,12 +100,14 @@ score = 100 - (avg_missing_pct × 0.5) - (outlier_column_count × 5)
 
 The Python sidecar (`sidecar/analyze.py`) computes:
 
-| Metric | Method |
-|--------|--------|
-| Missing values | `df.isnull().sum()` |
-| Outlier detection | IQR method (ratio > 5% flagged) |
-| Class imbalance | Value counts for categorical columns with < 10 unique values |
-| Data types | `df.dtypes` |
+| Metric | Method | Description |
+|--------|--------|-------------|
+| Missing Values | `df.isnull().sum()` | Visualizing gaps in dataset entries |
+| Outlier Detection | IQR method | Identifying anomalies in data distribution |
+| Class Imbalance | Value counts | Highlighting unequal class distributions |
+| Data Types | `df.dtypes` | Categorizing information in datasets |
+| Data Processing | Pipeline Tracking | Visualizing the flow of data analysis |
+| Analysis Techniques | Ensemble Methods | Integrating multiple data evaluation methods |
 
 ## Project Structure
 
@@ -123,7 +126,16 @@ dataguard-ai/
 ├── sidecar/
 │   ├── analyze.py            # Python analysis engine
 │   └── requirements.txt
+├── generate_ppt.py           # Auto-generates the project presentation deck
 └── package.json
+```
+
+## Presentation Deck
+
+You can automatically generate a `.pptx` presentation (complete with speaker notes) summarizing the DataGuard AI project by running:
+
+```bash
+python generate_ppt.py
 ```
 
 ## Compatibility

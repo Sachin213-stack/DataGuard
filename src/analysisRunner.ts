@@ -16,6 +16,8 @@ export interface AnalysisResult {
     outlierColumns: string[];
     classImbalance: Record<string, Record<string, number>> | null;
     dtypes: Record<string, string>;
+    dataProcessing: string[];
+    analysisTechniques: string[];
     summary: string;
     error?: string;
 }

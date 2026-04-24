@@ -87,6 +87,22 @@ def analyze(file_path: str) -> dict:
 
     dtypes = {col: str(dtype) for col, dtype in df.dtypes.items()}
 
+    data_processing = ["Dataset Loaded", "Schema Inferred"]
+    if missing_values:
+        data_processing.append("Missing Values Detected (Imputation Recommended)")
+    if outlier_columns:
+        data_processing.append("Outliers Flagged (Capping Recommended)")
+    if class_imbalance:
+        data_processing.append("Class Imbalance Detected (Resampling Recommended)")
+    data_processing.append("Analysis Complete")
+
+    analysis_techniques = [
+        "Null Value Profiling",
+        "IQR Outlier Detection",
+        "Categorical Distribution Analysis",
+        "Type Inference",
+    ]
+
     result = {
         'filePath': file_path,
         'shape': list(df.shape),
@@ -96,6 +112,8 @@ def analyze(file_path: str) -> dict:
         'outlierColumns': outlier_columns,
         'classImbalance': class_imbalance if class_imbalance else None,
         'dtypes': dtypes,
+        'dataProcessing': data_processing,
+        'analysisTechniques': analysis_techniques,
         'summary': '',
     }
     result['summary'] = generate_ai_summary(result)

@@ -84,6 +84,28 @@
     </div>
   </div>
 
+  <!-- Advanced Insights Row -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="card">
+      <h2 class="text-sm font-semibold text-pink-300 mb-3">⚖ Class Imbalance</h2>
+      <div id="class-imbalance-list" class="space-y-2 text-sm text-gray-300">
+        <span class="text-gray-500">None detected</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="text-sm font-semibold text-cyan-300 mb-3">⚙ Data Processing</h2>
+      <ul id="data-processing-list" class="list-disc pl-4 space-y-1 text-sm text-gray-300">
+        <span class="text-gray-500">Loading...</span>
+      </ul>
+    </div>
+    <div class="card">
+      <h2 class="text-sm font-semibold text-orange-300 mb-3">🔬 Analysis Techniques</h2>
+      <div id="analysis-techniques-list" class="flex flex-wrap gap-2 text-sm text-gray-300">
+        <span class="text-gray-500">Loading...</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Column Stats Table -->
   <div class="card">
     <h2 class="text-sm font-semibold text-gray-300 mb-3">📋 Column Details</h2>
@@ -199,6 +221,36 @@
       }
     }
   });
+
+  // Class Imbalance
+  const classImbEl = document.getElementById('class-imbalance-list');
+  if (data.classImbalance && Object.keys(data.classImbalance).length > 0) {
+    classImbEl.innerHTML = Object.entries(data.classImbalance).map(([col, counts]) => {
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+      const sortedClasses = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const topClass = sortedClasses[0];
+      const pct = ((topClass[1] / total) * 100).toFixed(1);
+      return `<div class="bg-gray-800 p-2 rounded"><span class="font-mono text-purple-300">${col}</span><br>Top: <span class="text-gray-100">${topClass[0]}</span> <span class="${pct > 80 ? 'text-red-400' : 'text-yellow-400'}">(${pct}%)</span></div>`;
+    }).join('');
+  } else {
+    classImbEl.innerHTML = '<span class="text-green-400">✅ Balanced</span>';
+  }
+
+  // Data Processing
+  const dataProcEl = document.getElementById('data-processing-list');
+  if (data.dataProcessing && data.dataProcessing.length > 0) {
+    dataProcEl.innerHTML = data.dataProcessing.map(step => `<li>${step}</li>`).join('');
+  } else {
+    dataProcEl.innerHTML = '<span class="text-gray-500">No steps detected</span>';
+  }
+
+  // Analysis Techniques
+  const techniquesEl = document.getElementById('analysis-techniques-list');
+  if (data.analysisTechniques && data.analysisTechniques.length > 0) {
+    techniquesEl.innerHTML = data.analysisTechniques.map(tech => `<span class="bg-[#45475a] text-[#cdd6f4] px-2 py-1 rounded text-xs">${tech}</span>`).join('');
+  } else {
+    techniquesEl.innerHTML = '<span class="text-gray-500">None</span>';
+  }
 
   // Column Table
   const tbody = document.getElementById('column-table-body');
