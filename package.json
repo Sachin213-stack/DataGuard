@@ -4,9 +4,18 @@
   "description": "AI-powered dataset health analysis for Data Scientists",
   "publisher": "dataguard",
   "version": "0.1.0",
-  "engines": { "vscode": "^1.85.0" },
-  "categories": ["Data Science", "Machine Learning"],
-  "activationEvents": ["onLanguage:python", "onLanguage:csv", "onCommand:dataguard.analyzeDataset"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Data Science",
+    "Machine Learning"
+  ],
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:csv",
+    "onCommand:dataguard.analyzeDataset"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -46,11 +55,36 @@
   },
   "scripts": {
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "test": "jest",
+    "test:python": "python3 -m pytest sidecar/tests/ -v"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/src"],
+    "testMatch": ["**/*.test.ts"],
+    "moduleNameMapper": {
+      "^vscode$": "<rootDir>/src/__mocks__/vscode.ts"
+    },
+    "transform": {
+      "^.+\\.tsx?$": ["ts-jest", {
+        "tsconfig": {
+          "strict": true,
+          "esModuleInterop": true,
+          "module": "commonjs",
+          "target": "ES2020",
+          "skipLibCheck": true
+        }
+      }]
+    }
   },
   "devDependencies": {
-    "typescript": "^5.3.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
-    "@types/node": "^20.0.0"
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "typescript": "^5.3.0"
   }
 }
