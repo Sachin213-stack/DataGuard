@@ -20,9 +20,9 @@ export class AnalysisRunner {
         return new Promise((resolve, reject) => {
             const sidecarPath = path.join(context.extensionPath, 'sidecar', 'analyze.py');
             const config = vscode.workspace.getConfiguration('dataguard');
-            const apiKey = config.get<string>('openaiApiKey', '');
+            const apiKey = config.get<string>('geminiApiKey', '');
 
-            const env = { ...process.env, OPENAI_API_KEY: apiKey };
+            const env = { ...process.env, GEMINI_API_KEY: apiKey };
             const proc = cp.spawn('python3', [sidecarPath, filePath], { env });
 
             let stdout = '';

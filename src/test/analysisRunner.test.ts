@@ -129,7 +129,7 @@ describe('AnalysisRunner.run', () => {
         );
     });
 
-    it('includes OPENAI_API_KEY in the spawned process environment', async () => {
+    it('includes GEMINI_API_KEY in the spawned process environment', async () => {
         // The vscode mock returns '' for any config.get call; we just verify the key is present
         const stdout = makeStream();
         const stderr = makeStream();
@@ -142,7 +142,7 @@ describe('AnalysisRunner.run', () => {
         await promise;
 
         const spawnOptions = mockedSpawn.mock.calls[0][2] as any;
-        expect(spawnOptions.env).toHaveProperty('OPENAI_API_KEY');
+        expect(spawnOptions.env).toHaveProperty('GEMINI_API_KEY');
     });
 
     it('accumulates data across multiple stdout chunks before parsing', async () => {
