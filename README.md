@@ -1,8 +1,9 @@
 # DataGuard AI 🛡
 
-> AI-powered dataset health analysis for Data Scientists — right inside VS Code.
+> AI-powered dataset health analysis for Data Scientists — right inside VS Code & Antigravity.
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.85.0-blue)](https://code.visualstudio.com/)
+[![Antigravity](https://img.shields.io/badge/Antigravity-Compatible-purple)](https://antigravity.dev/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-yellow)](https://python.org)
 
 ## Features
@@ -15,32 +16,51 @@
   - Data types donut chart
   - Per-column stats table
   - Outlier detection badges
-- **🤖 AI Summaries** — Rule-based summaries by default; GPT-3.5 summaries when OpenAI API key is configured
+- **🤖 AI Summaries** — Rule-based summaries by default; Gemini AI summaries when API key is configured
 - **🚨 Inline Decorations** — Red wavy underlines on data-loading lines when quality issues are detected
 
 ## Installation
 
 ### Prerequisites
 
-- VS Code 1.85+
+- **VS Code 1.85+** or **Antigravity** (VS Code-compatible)
 - Python 3.8+ with pip
 
-### Install Python dependencies
+### Step 1: Install Python dependencies
 
 ```bash
 pip install -r sidecar/requirements.txt
 ```
 
-### Build the extension
+### Step 2: Build & Package the extension
 
 ```bash
 npm install
 npm run compile
+npx @vscode/vsce package
 ```
 
-### Run in VS Code
+### Step 3: Install the `.vsix` extension
 
-Press `F5` to launch the Extension Development Host.
+**For VS Code:**
+```bash
+code --install-extension dataguard-ai-0.1.0.vsix
+```
+
+**For Antigravity:**
+```bash
+antigravity --install-extension dataguard-ai-0.1.0.vsix
+```
+
+**Or install manually via UI:**
+1. Open VS Code / Antigravity
+2. Press `Ctrl+Shift+P` → type **"Install from VSIX"**
+3. Select the `dataguard-ai-0.1.0.vsix` file
+4. Reload the editor when prompted
+
+### Development Mode
+
+Press `F5` to launch the Extension Development Host (works in both VS Code and Antigravity).
 
 ## Usage
 
@@ -53,13 +73,13 @@ Press `F5` to launch the Extension Development Host.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `dataguard.openaiApiKey` | string | `""` | OpenAI API key for GPT-powered summaries |
+| `dataguard.geminiApiKey` | string | `""` | Gemini API key for AI-powered summaries |
 
-Set via VS Code settings (`Ctrl+,`) or `settings.json`:
+Set via settings (`Ctrl+,`) or `settings.json`:
 
 ```json
 {
-  "dataguard.openaiApiKey": "sk-..."
+  "dataguard.geminiApiKey": "AIza..."
 }
 ```
 
@@ -92,16 +112,39 @@ The Python sidecar (`sidecar/analyze.py`) computes:
 dataguard-ai/
 ├── src/
 │   ├── extension.ts          # Entry point, event listeners
-│   ├── analysisRunner.ts     # Python sidecar spawner
+│   ├── analysisRunner.ts     # Python sidecar spawner (cross-platform)
 │   ├── codeLensProvider.ts   # CodeLens above read_* calls
 │   ├── decorationProvider.ts # Red underline decorations
+│   ├── constants.ts          # Shared patterns & config
 │   └── dashboardPanel.ts     # Webview panel manager
 ├── media/
-│   └── dashboard.html        # Chart.js + Tailwind dashboard
+│   ├── dashboard.html        # Chart.js + Tailwind dashboard
+│   └── icon.png              # Extension icon
 ├── sidecar/
 │   ├── analyze.py            # Python analysis engine
 │   └── requirements.txt
 └── package.json
+```
+
+## Compatibility
+
+| Editor | Status | Install Command |
+|--------|--------|-----------------|
+| VS Code | ✅ Fully Supported | `code --install-extension dataguard-ai-0.1.0.vsix` |
+| Antigravity | ✅ Fully Supported | `antigravity --install-extension dataguard-ai-0.1.0.vsix` |
+| Cursor | ✅ Should work | Install via VSIX UI |
+| Other VS Code forks | ✅ Should work | Install via VSIX UI |
+
+## Uninstall
+
+**VS Code:**
+```bash
+code --uninstall-extension dataguard.dataguard-ai
+```
+
+**Antigravity:**
+```bash
+antigravity --uninstall-extension dataguard.dataguard-ai
 ```
 
 ## License

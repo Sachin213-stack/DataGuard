@@ -2,8 +2,14 @@
   "name": "dataguard-ai",
   "displayName": "DataGuard AI",
   "description": "AI-powered dataset health analysis for Data Scientists",
-  "publisher": "dataguard",
+  "publisher": "Sachin213-stack",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sachin213-stack/DataGuard.git"
+  },
+  "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -11,10 +17,30 @@
     "Data Science",
     "Machine Learning"
   ],
+  "keywords": [
+    "data",
+    "csv",
+    "dataset",
+    "data quality",
+    "pandas",
+    "machine learning",
+    "data science",
+    "analysis"
+  ],
+  "galleryBanner": {
+    "color": "#1a1a2e",
+    "theme": "dark"
+  },
   "activationEvents": [
     "onLanguage:python",
     "onLanguage:csv",
-    "onCommand:dataguard.analyzeDataset"
+    "onLanguage:json",
+    "onCommand:dataguard.analyzeDataset",
+    "onCommand:dataguard.browseAndAnalyze",
+    "workspaceContains:**/*.csv",
+    "workspaceContains:**/*.parquet",
+    "workspaceContains:**/*.json",
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -22,6 +48,11 @@
       {
         "command": "dataguard.analyzeDataset",
         "title": "Analyze Dataset Health",
+        "category": "DataGuard"
+      },
+      {
+        "command": "dataguard.browseAndAnalyze",
+        "title": "Browse & Analyze Any Dataset...",
         "category": "DataGuard"
       }
     ],
@@ -49,6 +80,11 @@
           "type": "string",
           "default": "",
           "description": "Gemini API key for AI-powered summaries"
+        },
+        "dataguard.autoAnalyzeOnCreate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically prompt to analyze when new CSV/Parquet/JSON files are created"
         }
       }
     }
@@ -57,7 +93,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "jest",
-    "test:python": "python3 -m pytest sidecar/tests/ -v"
+    "test:python": "python -m pytest sidecar/tests/ -v"
   },
   "jest": {
     "preset": "ts-jest",

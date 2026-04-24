@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import * as path from 'path';
+import * as os from 'os';
+
+function getPythonCommand(): string {
+    return os.platform() === 'win32' ? 'python' : 'python3';
+}
 
 export interface AnalysisResult {
     filePath: string;
@@ -23,7 +28,7 @@ export class AnalysisRunner {
             const apiKey = config.get<string>('geminiApiKey', '');
 
             const env = { ...process.env, GEMINI_API_KEY: apiKey };
-            const proc = cp.spawn('python3', [sidecarPath, filePath], { env });
+            const proc = cp.spawn(getPythonCommand(), [sidecarPath, filePath], { env });
 
             let stdout = '';
             let stderr = '';

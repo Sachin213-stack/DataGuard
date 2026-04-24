@@ -105,7 +105,7 @@
 
 <script>
 (function() {
-  const data = __ANALYSIS_DATA__;
+  const data = {"filePath": "C:\\Users\\ASUS\\.gemini\\Data\\DataGuard\\test_data\\titanic.csv", "shape": [891, 12], "columns": ["PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"], "missingValues": {"Age": 177, "Cabin": 687, "Embarked": 2}, "missingPercent": {"Age": 19.87, "Cabin": 77.1, "Embarked": 0.22}, "outlierColumns": ["SibSp", "Fare"], "classImbalance": {"Sex": {"male": 577, "female": 314}, "Embarked": {"S": 644, "C": 168, "Q": 77}}, "dtypes": {"PassengerId": "int64", "Survived": "int64", "Pclass": "int64", "Name": "str", "Sex": "str", "Age": "float64", "SibSp": "int64", "Parch": "int64", "Ticket": "str", "Fare": "float64", "Cabin": "str", "Embarked": "str"}, "summary": "\u26a0 Column 'Cabin' has 77.1% missing values \u2014 consider imputation or removal. \u26a0 Outliers detected in: SibSp, Fare. Consider capping or log-transformation."};
 
   // File name
   const parts = (data.filePath || '').replace(/\\/g, '/').split('/');
@@ -117,7 +117,7 @@
   document.getElementById('stat-missing').textContent = Object.keys(data.missingValues || {}).length;
 
   // Health score
-  const OUTLIER_PENALTY = __OUTLIER_PENALTY__;
+  const OUTLIER_PENALTY = 5;
   const avgMissing = Object.keys(data.missingPercent || {}).length > 0
     ? Object.values(data.missingPercent).reduce((a, b) => a + b, 0) / Object.keys(data.missingPercent).length
     : 0;

@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 export const DATA_LOAD_PATTERNS = [
     /pd\.read_csv\(['"](.+?)['"]\)/,
     /pd\.read_parquet\(['"](.+?)['"]\)/,

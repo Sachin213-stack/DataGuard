@@ -81,7 +81,7 @@ def analyze(file_path: str) -> dict:
             outlier_columns.append(col)
 
     class_imbalance = {}
-    for col in df.select_dtypes(include=['object', 'category']).columns:
+    for col in df.select_dtypes(include=['object', 'category', 'str']).columns:
         if df[col].nunique() < MAX_UNIQUE_FOR_CATEGORICAL:
             class_imbalance[col] = df[col].value_counts().to_dict()
 

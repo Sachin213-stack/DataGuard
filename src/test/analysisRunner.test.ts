@@ -1,5 +1,6 @@
 import { AnalysisRunner } from '../analysisRunner';
 import * as cp from 'child_process';
+import * as path from 'path';
 import { EventEmitter } from 'events';
 
 // Mock child_process at the module level
@@ -123,8 +124,8 @@ describe('AnalysisRunner.run', () => {
         await promise;
 
         expect(mockedSpawn).toHaveBeenCalledWith(
-            'python3',
-            ['/my/extension/sidecar/analyze.py', '/data/test.csv'],
+            expect.any(String),
+            [path.join('/my/extension', 'sidecar', 'analyze.py'), '/data/test.csv'],
             expect.objectContaining({ env: expect.any(Object) })
         );
     });
