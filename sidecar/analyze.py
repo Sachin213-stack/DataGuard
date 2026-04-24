@@ -37,13 +37,13 @@ def generate_rule_based_summary(result: dict) -> str:
     return ' '.join(lines)
 
 def generate_ai_summary(result: dict) -> str:
-    api_key = os.environ.get('OPENAI_API_KEY', '')
+    api_key = os.environ.get('GEMINI_API_KEY', '')
     if not api_key:
         return generate_rule_based_summary(result)
     try:
-        from langchain_openai import ChatOpenAI
-        from langchain.schema import HumanMessage
-        llm = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.3, openai_api_key=api_key)
+        import google.generativeai as genai
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-pro')
         stats_text = json.dumps({
             'shape': result['shape'],
             'missingPercent': result['missingPercent'],
@@ -54,8 +54,8 @@ def generate_ai_summary(result: dict) -> str:
             "You are a data quality expert. Given these dataset statistics, provide concise, "
             "actionable advice in 2-3 sentences for a Data Scientist:\n\n" + stats_text
         )
-        response = llm([HumanMessage(content=prompt)])
-        return response.content
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
         return generate_rule_based_summary(result) + f" (AI unavailable: {e})"
 

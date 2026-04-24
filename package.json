@@ -45,10 +45,10 @@
     "configuration": {
       "title": "DataGuard",
       "properties": {
-        "dataguard.openaiApiKey": {
+        "dataguard.geminiApiKey": {
           "type": "string",
           "default": "",
-          "description": "OpenAI API key for AI-powered summaries"
+          "description": "Gemini API key for AI-powered summaries"
         }
       }
     }
