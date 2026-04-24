@@ -5,6 +5,10 @@ import os
 import numpy as np
 import pandas as pd
 
+OUTLIER_FRACTION_THRESHOLD = 0.05
+MAX_UNIQUE_FOR_CATEGORICAL = 10
+IMBALANCE_THRESHOLD = 0.8
+
 def detect_outliers_iqr(series: pd.Series) -> float:
     """Return fraction of outliers using IQR method."""
     Q1 = series.quantile(0.25)
@@ -26,7 +30,7 @@ def generate_rule_based_summary(result: dict) -> str:
     if result['classImbalance']:
         for col, counts in result['classImbalance'].items():
             values = list(counts.values())
-            if max(values) / (sum(values) + 1e-9) > 0.8:
+            if max(values) / (sum(values) + 1e-9) > IMBALANCE_THRESHOLD:
                 lines.append(f"⚠ Column '{col}' is heavily imbalanced. Consider resampling techniques.")
     if not lines:
         lines.append("✅ No critical data quality issues detected. Your dataset looks healthy!")
@@ -73,12 +77,12 @@ def analyze(file_path: str) -> dict:
     outlier_columns = []
     for col in df.select_dtypes(include=[np.number]).columns:
         frac = detect_outliers_iqr(df[col].dropna())
-        if frac > 0.05:
+        if frac > OUTLIER_FRACTION_THRESHOLD:
             outlier_columns.append(col)
 
     class_imbalance = {}
     for col in df.select_dtypes(include=['object', 'category']).columns:
-        if df[col].nunique() < 10:
+        if df[col].nunique() < MAX_UNIQUE_FOR_CATEGORICAL:
             class_imbalance[col] = df[col].value_counts().to_dict()
 
     dtypes = {col: str(dtype) for col, dtype in df.dtypes.items()}

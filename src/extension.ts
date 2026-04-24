@@ -3,6 +3,7 @@ import { DataGuardCodeLensProvider } from './codeLensProvider';
 import { AnalysisRunner } from './analysisRunner';
 import { DashboardPanel } from './dashboardPanel';
 import { DecorationProvider } from './decorationProvider';
+import { findDataLoadMatch, isDataFile } from './constants';
 
 export function activate(context: vscode.ExtensionContext) {
     const codeLensProvider = new DataGuardCodeLensProvider();
@@ -29,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
-            if (['.csv', '.parquet', '.json'].some(ext => doc.fileName.endsWith(ext))) {
+            if (isDataFile(doc.fileName)) {
                 vscode.commands.executeCommand('dataguard.analyzeDataset', doc.fileName);
             }
         })
@@ -38,20 +39,9 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument(event => {
             if (event.document.languageId !== 'python') { return; }
-            const text = event.document.getText();
-            const patterns = [
-                /pd\.read_csv\(['"](.+?)['"]\)/,
-                /pd\.read_parquet\(['"](.+?)['"]\)/,
-                /pl\.read_csv\(['"](.+?)['"]\)/,
-                /pl\.read_parquet\(['"](.+?)['"]\)/,
-                /pd\.read_json\(['"](.+?)['"]\)/,
-            ];
-            for (const pattern of patterns) {
-                const match = text.match(pattern);
-                if (match) {
-                    vscode.commands.executeCommand('dataguard.analyzeDataset', match[1]);
-                    break;
-                }
+            const match = findDataLoadMatch(event.document.getText());
+            if (match) {
+                vscode.commands.executeCommand('dataguard.analyzeDataset', match[1]);
             }
         })
     );

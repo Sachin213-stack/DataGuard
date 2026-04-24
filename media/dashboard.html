@@ -116,10 +116,11 @@
   document.getElementById('stat-missing').textContent = Object.keys(data.missingValues || {}).length;
 
   // Health score
+  const OUTLIER_PENALTY = 5;
   const avgMissing = Object.keys(data.missingPercent || {}).length > 0
     ? Object.values(data.missingPercent).reduce((a, b) => a + b, 0) / Object.keys(data.missingPercent).length
     : 0;
-  const outlierPenalty = (data.outlierColumns || []).length * 5;
+  const outlierPenalty = (data.outlierColumns || []).length * OUTLIER_PENALTY;
   const healthScore = Math.max(0, Math.min(100, Math.round(100 - avgMissing * 0.5 - outlierPenalty)));
 
   document.getElementById('gauge-text').textContent = healthScore;
